@@ -1764,3 +1764,703 @@ ASC;
 SELECT
 SUM(valor_unitario)
 FROM pedido_produto
+
+SELECT *
+FROM cliente;
+
+
+SELECT 
+	cln.nome as cliente,
+	prf.nome as profissao
+FROM 
+	cliente as cln
+LEFT OUTER JOIN
+	profissao as prf ON cln.idprofissao = prf.idprofissao;
+
+
+SELECT 
+	cln.nome as cliente,
+	prf.nome as profissao
+FROM 
+	cliente as cln
+INNER JOIN
+	profissao as prf ON cln.idprofissao = prf.idprofissao;
+
+
+SELECT 
+	cln.nome as cliente,
+	prf.nome as profissao
+FROM 
+	cliente as cln
+RIGHT OUTER JOIN
+	profissao as prf ON cln.idprofissao = prf.idprofissao;
+	
+--Exercícios – joins
+
+--1. O nome do cliente, a profissão, a nacionalidade, o logradouro, o número, o complemento, o bairro, o município e a unidade de federação.
+
+SELECT
+	cln.nome AS cliente,
+	prf.nome AS profissao,
+	nac.nome AS nacionalidade,
+	logradouro, 
+	numero,
+	cpt.nome AS complemento,
+	bro.nome AS bairro, 
+	mnc.nome AS municipio,
+	uf.nome AS estado,
+	uf.sigla
+FROM
+	cliente AS cln 
+LEFT OUTER JOIN
+	profissao AS prf ON cln.idprofissao = prf.idprofissao
+LEFT OUTER JOIN
+	nacionalidade AS nac ON cln.idnacionalidade = nac.idnacionalidade
+LEFT OUTER JOIN
+	complemento AS cpt ON cln.idcomplemento = cpt.idcomplemento
+LEFT OUTER JOIN
+	bairro AS bro ON cln.idbairro = bro.idbairro
+LEFT OUTER JOIN
+	municipio AS mnc ON cln.idmunicipio = mnc.idmunicipio
+LEFT OUTER JOIN
+	uf ON mnc.iduf = uf.iduf
+
+
+SELECT 
+	*
+FROM
+	cliente;
+
+SELECT 
+	*
+FROM
+	uf
+
+--2. O nome do produto, o valor e o nome do fornecedor.
+
+SELECT
+	pdt.nome AS produto,
+	pdt.valor AS preço,
+	fnc.nome AS fornecedor
+FROM
+	produto AS pdt
+LEFT OUTER JOIN
+	fornecedor AS fnc ON pdt.idfornecedor = fnc.idfornecedor
+
+
+
+SELECT 
+	*
+FROM
+	produto;
+
+
+
+--3. O nome da transportadora e o município.
+
+SELECT
+	*
+FROM
+	transportadora;
+	
+SELECT 
+	tpd.nome AS transportadora,
+	mnc.nome AS municipio
+FROM
+	transportadora AS tpd
+LEFT OUTER JOIN
+	municipio AS mnc ON tpd.idmunicipio = mnc.idmunicipio
+	
+	
+--4. A data do pedido, o valor, o nome do cliente, o nome da transportadora e o nome do vendedor.
+
+
+SELECT
+	pdo.data_pedido AS data_do_pedido,
+	pdo.valor AS valor_pedido,
+	cln.nome AS nome_cliente, 
+	tpr.nome AS transportadora,
+	vdr.nome AS vendedor
+FROM 
+	pedido AS pdo
+LEFT OUTER JOIN
+	cliente AS cln ON pdo.idcliente = cln.idcliente
+LEFT OUTER JOIN
+	transportadora AS tpr ON pdo.idtransportadora = tpr.idtransportadora
+LEFT OUTER JOIN
+	vendedor AS vdr ON pdo.idvendedor = vdr.idvendedor;
+	
+	
+SELECT
+	*
+FROM
+	pedido;
+	
+SELECT
+	*
+FROM
+	cliente;
+
+
+
+
+
+
+--5. O nome do produto, a quantidade e o valor unitário dos produtos do pedido.
+SELECT
+	*
+FROM
+	pedido_produto;
+
+
+SELECT
+	pdo.nome AS produto,
+	pp.quantidade,
+	pdo.valor AS valor_unitario
+FROM
+	pedido_produto AS pp
+LEFT OUTER JOIN
+	produto as pdo ON pp.idproduto = pdo.idproduto;
+	
+
+
+
+
+
+--6. O nome dos clientes e a data do pedido dos clientes que fizeram algum pedido (ordenado pelo nome do cliente).
+
+SELECT
+	cln.nome AS nome_cliente,
+	pdo.data_pedido AS data_compra
+FROM 
+	pedido AS pdo
+LEFT OUTER JOIN
+	cliente AS cln ON pdo.idcliente = cln.idcliente
+ORDER BY cln.nome;
+
+
+SELECT
+	*
+FROM
+	cliente;
+
+SELECT
+	*
+FROM
+	pedido;
+
+
+
+
+
+--7. O nome dos clientes e a data do pedido de todos os clientes, independente se tenham feito pedido (ordenado pelo nome do cliente).
+
+SELECT
+	cln.nome AS nome_cliente,
+	pdo.data_pedido AS data_compra
+FROM 
+	pedido AS pdo
+RIGHT OUTER JOIN
+	cliente AS cln ON pdo.idcliente = cln.idcliente
+ORDER BY cln.nome;
+
+
+
+
+
+--8. O nome da cidade e a quantidade de clientes que moram naquela cidade.
+
+SELECT
+	*
+FROM
+	cliente;
+
+SELECT
+	mnc.nome,
+	COUNT(cln.idcliente)
+FROM
+	cliente AS cln
+LEFT OUTER JOIN
+	municipio AS mnc ON cln.idmunicipio = mnc.idmunicipio
+GROUP BY
+	mnc.nome
+
+
+
+
+
+--9. O nome do fornecedor e a quantidade de produtos de cada fornecedor.
+
+SELECT
+	fnr.nome,
+	SUM(quantidade)
+FROM 
+	pedido_produto AS pp
+LEFT OUTER JOIN
+	produto AS pdo ON pp.idproduto = pdo.idproduto
+LEFT OUTER JOIN
+	fornecedor AS fnr ON pdo.idfornecedor = fnr.idfornecedor
+GROUP BY
+	fnr.nome
+	
+
+SELECT 
+	*
+FROM
+	produto;
+
+SELECT
+	*
+FROM 
+	fornecedor;
+	
+SELECT 
+	*
+FROM
+	pedido_produto;
+
+--10.O nome do cliente e o somatório do valor do pedido (agrupado por cliente).
+SELECT
+	*
+FROM
+	pedido;
+
+
+SELECT
+	cln.nome AS nome_cliente,
+	SUM(valor)
+FROM 
+	pedido as pdo
+LEFT OUTER JOIN
+	cliente AS cln ON pdo.idcliente =  cln.idcliente
+GROUP BY
+	cln.nome
+ORDER BY
+	cln.nome;
+
+--11.O nome do vendedor e o somatório do valor do pedido (agrupado por vendedor).
+SELECT
+	vdr.nome AS nome_vendedor,
+	SUM(valor) AS vendas_total
+FROM
+	pedido AS pdo
+LEFT OUTER JOIN
+	vendedor as vdr ON pdo.idvendedor = vdr.idvendedor
+GROUP BY
+	vdr.nome
+
+
+
+
+--12.O nome da transportadora e o somatório do valor do pedido (agrupado por transportadora).
+
+SELECT
+	tpr.nome AS nome_transportadora,
+	SUM(valor)
+FROM
+	pedido AS pdo
+LEFT OUTER JOIN
+	transportadora AS tpr ON pdo.idtransportadora = tpr.idtransportadora
+GROUP BY
+	tpr.nome
+
+
+--13.O nome do cliente e a quantidade de pedidos de cada um (agrupado por cliente).
+
+SELECT
+	*
+FROM
+	pedido;
+
+SELECT
+	cln.nome AS nome_cliente,
+	COUNT(pdo.idpedido)
+FROM
+	pedido AS pdo
+LEFT OUTER JOIN
+	cliente AS cln ON pdo.idcliente = cln.idcliente
+GROUP BY
+	cln.nome
+ORDER BY
+	cln.nome;
+
+
+
+--14.O nome do produto e a quantidade vendida (agrupado por produto).
+
+SELECT
+	pdo.nome AS nome_produto,
+	SUM(pp.quantidade) AS quandidade_vendida
+FROM
+	pedido_produto as pp
+LEFT OUTER JOIN
+	produto AS pdo ON pp.idproduto = pdo.idproduto
+GROUP BY
+	pdo.nome;
+
+
+--15.A data do pedido e o somatório do valor dos produtos do pedido (agrupado pela data do pedido).
+
+
+SELECT
+	*
+FROM
+	pedido;
+
+SELECT
+	*
+FROM
+	pedido_produto;
+	
+SELECT
+	pdo.data_pedido,
+	SUM(pp.valor_unitario) AS soma_dos_produtos
+FROM 
+	pedido_produto AS pp
+LEFT OUTER JOIN
+	pedido AS pdo ON pp.idpedido =  pdo.idpedido
+GROUP BY
+	pdo.data_pedido
+ORDER BY
+	pdo.data_pedido;
+
+
+--16.A data do pedido e a quantidade de produtos do pedido (agrupado pela data do pedido).
+
+SELECT
+	pdo.data_pedido,
+	COUNT(pp.quantidade) AS quantidade_dos_produtos
+FROM 
+	pedido_produto AS pp
+LEFT OUTER JOIN
+	pedido AS pdo ON pp.idpedido =  pdo.idpedido
+GROUP BY
+	pdo.data_pedido
+ORDER BY
+	pdo.data_pedido;
+
+
+SELECT
+	*
+FROM
+	pedido;
+
+SELECT 
+	data_pedido, 
+    EXTRACT(DAY FROM data_pedido) AS dia,
+	EXTRACT(MONTH FROM data_pedido) AS mes,
+	EXTRACT(YEAR FROM data_pedido) AS ano
+FROM
+	pedido;
+	
+
+SELECT 
+	nome,
+	SUBSTRING(nome FROM 1 FOR 5),
+	SUBSTRING(nome, 2)
+FROM 
+	cliente;
+
+SELECT 
+	nome,
+	UPPER(nome)
+FROM
+	cliente;
+	
+SELECT 
+	nome,
+	cpf,
+	COALESCE(cpf, 'Não informado')
+FROM
+	cliente;
+	
+
+SELECT
+	sigla
+FROM
+	uf;
+
+SELECT
+	CASE sigla
+		WHEN 'PR' THEN 'PARANÁ'
+		WHEN 'SC' THEN 'SANTA CATARINA'
+	ELSE 'Outros'
+	END AS uf
+FROM
+	uf;
+	
+--Exercícios – comandos adicionais
+
+--1. O nome do cliente e somente o mês de nascimento. Caso a data de nascimento não esteja preenchida mostrar a mensagem “Não informado”.
+
+SELECT
+	nome, 
+	COALESCE(EXTRACT(MONTH FROM data_nascimento), 0) AS mes_nascimento
+FROM
+	cliente;
+
+
+
+
+--2. O nome do cliente e somente o nome do mês de nascimento (Janeiro, Fevereiro etc). Caso a data de nascimento não esteja preenchida mostrar a mensagem “Não informado”.
+
+
+
+SELECT
+	nome,
+	CASE EXTRACT(MONTH FROM data_nascimento)
+		WHEN 1 THEN 'Janeiro'
+		WHEN 2 THEN 'Fevereiro'
+		WHEN 3 THEN 'Março'
+		WHEN 4 THEN 'Abril'
+		WHEN 5 THEN 'Maio'
+		WHEN 6 THEN 'Junho'
+		WHEN 7 THEN 'Julho'
+		WHEN 8 THEN 'Agosto'
+		WHEN 9 THEN 'Setembro'
+		WHEN 10 THEN 'Outubro'
+		WHEN 11 THEN 'Novembro'
+		WHEN 12 THEN 'Dezembro'
+	Else 'Não informado'
+	END AS mes_nascimento
+FROM
+	cliente
+ORDER BY
+	EXTRACT(MONTH FROM data_nascimento)
+ASC;
+
+
+--3. O nome do cliente e somente o ano de nascimento. Caso a data de nascimento não esteja preenchida mostrar a mensagem “Não informado”.
+
+SELECT
+	nome,
+	COALESCE(EXTRACT(YEAR FROM data_nascimento), 0)	
+FROM
+	cliente;
+
+
+--4. O caractere 5 até o caractere 10 de todos os municípios.
+
+SELECT
+	nome,
+	SUBSTRING(nome FROM 5 FOR 10)
+FROM
+	municipio;
+
+--5. O nome de todos os municípios em letras maiúsculas.
+
+SELECT
+	UPPER(nome)
+FROM
+	municipio;
+
+--6. O nome do cliente e o gênero. Caso seja M mostrar “Masculino”, senão mostrar “Feminino”.
+
+SELECT
+	nome,
+	CASE genero
+		WHEN 'M' THEN 'Masculino'
+		WHEN 'F' THEN 'Feminino'
+	ELSE 'Não preenchido'
+	END AS sexo
+FROM
+	cliente;
+
+--7. O nome do produto e o valor. Caso o valor seja maior do que R$ 500,00 mostrar a mensagem “Acima de 500”, caso contrário, mostrar a mensagem “Abaixo de 500”.
+
+SELECT
+	nome,
+	case 
+		WHEN valor > 500 THEN 'Acima de 500 ou giual a 500'
+	ELSE 'Abaixo de 500'
+	END AS valores
+FROM
+	produto;
+
+-- subconsultas
+
+SELECT
+	data_pedido,
+	valor
+FROM
+	pedido
+WHERE
+	valor >(SELECT AVG(valor) FROM pedido);
+	
+
+SELECT
+	AVG(valor)
+FROM
+	pedido;
+	
+
+
+SELECT
+	pdd.data_pedido,
+	pdd.valor,
+	(SELECT SUM(quantidade) FROM pedido_produto pdp WHERE pdp.idpedido = pdd.idpedido)
+FROM
+	pedido AS pdd;
+	
+	
+SELECT
+	*
+FROM 
+	pedido_produto;
+
+UPDATE
+	pedido 
+SET 
+	valor = valor + (valor * 5) / 100
+WHERE
+	valor > (SELECT AVG(valor) FROM pedido);
+
+
+SELECT
+	*
+FROM
+	pedido;
+	
+--Exercícios – subconsultas
+
+--1. O nome dos clientes que moram na mesma cidade do Manoel. Não deve ser mostrado o Manoel.
+
+SELECT
+	nome,
+	idmunicipio
+FROM
+	cliente
+WHERE
+	idmunicipio = (SELECT idmunicipio FROM cliente WHERE nome = 'Manoel')
+AND idcliente <> 1;
+
+
+SELECT
+	nome,
+	idmunicipio
+FROM
+	cliente
+Where
+	nome = 'Manoel'
+
+--2. A data e o valor dos pedidos que o valor do pedido seja menor que a média de todos os pedidos.
+SELECT
+	data_pedido,
+	valor AS valores_abaixo_média
+FROM
+	pedido
+WHERE 
+	valor < (SELECT AVG(valor) FROM pedido)
+
+--3. A data,o valor, o cliente e o vendedor dos pedidos que possuem 2 ou mais produtos.
+SELECT
+	*
+FROM
+	pedido;
+
+SELECT
+	*
+FROM
+	pedido_produto;
+
+
+
+SELECT
+	pdd.data_pedido,
+	pdd.valor,
+	cln.nome,
+	vdd.nome,
+FROM
+	pedido AS pdd
+LEFT OUTER JOIN
+	cliente AS cln ON pdd.idcliente = cln.idcliente
+LEFT OUTER JOIN
+	vendedor AS vdd ON pdd.idvendedor = vdd.idvendedor
+WHERE 
+	(SELECT SUM(quantidade) FROM pedido_produto AS pdp WHERE pdp.idpedido = pdd.idpedido) >= 2;
+
+
+
+--4. O nome dos clientes que moram na mesma cidade da transportadora BSTransportes.
+SELECT
+	*
+FROM
+	cliente;
+
+SELECT
+	*
+FROM
+	transportadora;
+
+SELECT
+	nome
+FROM
+	cliente
+WHERE 
+	idmunicipio = (SELECT idmunicipio FROM transportadora WHERE nome = 'BS.Transportes');
+
+--5. O nome do cliente e o município dos clientes que estão localizados no mesmo município de qualquer uma das transportadoras.
+SELECT
+	cln.nome,
+	mnc.nome
+FROM
+	cliente cln
+LEFT OUTER JOIN
+	municipio mnc ON cln.idmunicipio = mnc.idmunicipio
+WHERE
+	cln.idmunicipio IN (SELECT idmunicipio FROM transportadora)
+
+SELECT
+	nome, 
+	idmunicipio
+FROM 
+	cliente
+WHERE 
+	idmunicipio in (SELECT idmunicipio FROM transportadora)
+
+--6. Atualizar o valor do pedido em 5% para os pedidos que o somatório do valor total dos produtos daquele pedido seja maior que a média do valor total
+UPDATE
+	pedido 
+SET
+	valor = valor + ((valor * 5) / 100)
+WHERE 
+	(SELECT SUM(valor_unitario) FROM pedido_produto pdp WHERE pdp.idpedido = pedido.idpedido)> (SELECT AVG(valor_unitario)FROM pedido_produto);
+	
+	
+SELECT
+	pdd.idpedido,
+	(SELECT SUM(valor_unitario) FROM pedido_produto pdp WHERE pdp.idpedido = pdd.idpedido)
+FROM
+	pedido pdd
+
+
+
+SELECT
+	AVG(valor_unitario)
+FROM
+	pedido_produto;
+
+SELECT
+	*
+FROM 
+	pedido
+
+--7. O nome do cliente e a quantidade de pedidos feitos pelo cliente.
+SELECT
+	cln.nome,
+	(SELECT COUNT(idpedido) FROM pedido pdd WHERE pdd.idcliente = cln.idcliente) AS total
+FROM
+	cliente cln;
+
+--8. Para revisar, refaça o exercício anterior (número 07) utilizando group by e mostrando somente os clientes que fizeram pelo menos um pedido.
+
+SELECT
+	cln.nome,
+	count(pdd.idpedido)
+FROM 
+	pedido pdd
+LEFT OUTER JOIN
+	cliente cln ON pdd.idcliente = cln.idcliente
+GROUP BY
+	cln.nome;
+	
