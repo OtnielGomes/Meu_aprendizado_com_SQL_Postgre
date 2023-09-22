@@ -2463,4 +2463,563 @@ LEFT OUTER JOIN
 	cliente cln ON pdd.idcliente = cln.idcliente
 GROUP BY
 	cln.nome;
+
+DROP
+	VIEW cliente_profissao;
+
+CREATE
+	VIEW cliente_profissao AS
+SELECT
+	cln.nome AS cliente,
+	cln.cpf,
+	prf.nome AS profissao
+FROM
+	cliente cln
+LEFT OUTER JOIN
+	profissao prf ON cln.idprofissao = prf.idprofissao;
 	
+SELECT
+	*
+FROM
+	cliente_profissao
+WHERE
+	profissao = 'Professor';
+
+--Exercícios views
+
+--1. O nome, a profissão, a nacionalidade, o complemento, o município, 
+--a unidade de federação, o bairro, o CPF,o RG, a data de nascimento, 
+--o gênero (mostrar “Masculino” ou “Feminino”), o logradouro, o número e as observações dos clientes.
+
+SELECT
+	*
+FROM
+	cliente;
+SELECT
+	*
+FROM
+	complemento;
+	
+
+SELECT
+	cln.nome AS cliente,
+	pfo.nome AS profissao,
+	ncd.nome AS nacionalidade,
+	cpt.nome AS complemento,
+	mnc.nome AS municipio,
+	uf.nome AS uf,
+	bro.nome AS bairro,
+	cln.cpf AS cpf,
+	cln.rg AS rg,
+	CASE cln.genero
+		WHEN 'F' THEN 'Feminino'
+		WHEN 'M' THEN 'Masculino'
+	ELSE 'Não informado'
+	END AS genero
+FROM
+	cliente cln
+LEFT OUTER JOIN
+	profissao pfo ON cln.idprofissao = pfo.idprofissao
+LEFT OUTER JOIN
+	nacionalidade ncd ON cln.idnacionalidade = ncd.idnacionalidade
+LEFT OUTER JOIN
+	complemento cpt ON cln.idcomplemento = cpt.idcomplemento 
+LEFT OUTER JOIN
+	municipio mnc ON cln.idmunicipio = mnc.idmunicipio
+LEFT OUTER JOIN
+	uf ON mnc.iduf = uf.iduf
+LEFT OUTER JOIN
+	bairro bro ON cln.idbairro = bro.idbairro
+
+
+
+--2. O nome do município e o nome e a sigla da unidade da federação.
+
+--3. O nome do produto, o valor e o nome do fornecedor dos produtos.
+
+--4. O nome da transportadora, o logradouro, o número, o nome da unidade de federação e a sigla da unidade de federação das transportadoras.
+
+--5. A data do pedido, o valor, o nome da transportadora, o nome do cliente e o nome do vendedor dos pedidos.
+
+--6. O nome do produto, a quantidade, o valor unitário e o valor total dos produtos do pedido.
+
+
+SELECT
+	*
+FROM
+	cliente;
+
+CREATE TABLE exemplo(
+	idexemplo serial NOT null,
+	nome varchar(50) NOT null,
+	
+	CONSTRAINT pk_exemplo_idexemplo PRIMARY KEY (idexemplo)
+);
+
+SELECT	
+	*
+FROM
+	exemplo;
+	
+INSERT INTO exemplo (nome)
+VALUES ('Exemplo1');
+
+INSERT INTO exemplo (nome)
+VALUES ('Exemplo2');
+
+INSERT INTO exemplo (nome)
+VALUES ('Exemplo3');
+
+INSERT INTO exemplo (nome)
+VALUES ('Exemplo4');
+
+INSERT INTO exemplo (nome)
+VALUES ('Exemplo5');
+
+SELECT
+	*
+FROM
+	exemplo;
+	
+
+SELECT
+	MAX(idbairro) + 1
+FROM
+	bairro;
+
+
+SELECT
+	*
+FROM
+	bairro;
+
+
+CREATE SEQUENCE bairro_id_seq MINVALUE 5;
+
+ALTER TABLE 
+	bairro 
+ALTER
+	idbairro
+SET DEFAULT nextval('bairro_id_seq');
+
+ALTER SEQUENCE
+	bairro_id_seq
+OWNED BY
+	bairro.idbairro;
+
+SELECT
+	*
+FROM
+	bairro;
+	
+	
+INSERT INTO
+	bairro (nome)
+VALUES
+	('Test1');
+
+INSERT INTO
+	bairro (nome)
+VALUES
+	('Test2');
+	
+-- cliente------------
+
+SELECT
+	MAX(idcliente) + 1
+FROM
+	cliente;
+	
+CREATE SEQUENCE
+	cliente_id_seq
+MINVALUE
+	18;
+
+ALTER TABLE
+	cliente
+ALTER
+	idcliente
+SET DEFAULT
+	nextval('cliente_id_seq');
+
+ALTER SEQUENCE
+	cliente_id_seq
+OWNED BY
+	cliente.idcliente;
+
+INSERT INTO
+	cliente (nome, cpf, rg, data_nascimento, genero, logradouro, numero, observacoes, idprofissao, idnacionalidade, idcomplemento, idbairro, idmunicipio)
+VALUES
+	('Otniel', '12312312333', '123456', '1193-01-11', 'M', 'Alameda das Larangeiras', '33', 'teste', null, 1, 1, null, null);
+	
+INSERT INTO
+	cliente (nome, cpf, rg, data_nascimento, genero, logradouro, numero, observacoes, idprofissao, idnacionalidade, idcomplemento, idbairro, idmunicipio)
+VALUES
+	('Teste_2', '12312312333', '123456', '1193-01-11', 'M', 'Alameda das Larangeiras', '33', 'teste', null, 1, 1, null, null);
+	
+SELECT
+	*
+FROM
+	cliente
+ORDER BY
+	idcliente;
+
+
+-- complemento------------
+
+SELECT	
+	MAX (idcomplemento) + 1
+FROM
+	complemento;
+	
+CREATE SEQUENCE
+	complemento_id_seq
+MINVALUE
+	3;
+
+ALTER TABLE
+	complemento
+ALTER
+	idcomplemento
+SET DEFAULT
+	nextval('complemento_id_seq');
+
+ALTER SEQUENCE
+	complemento_id_seq
+OWNED BY
+	complemento.idcomplemento;
+	
+SELECT
+	*
+FROM
+	complemento;
+
+INSERT INTO
+	complemento (nome)
+VALUES
+	('Condominio');
+	
+INSERT INTO
+	complemento (nome)
+VALUES
+	('Sobrado');
+
+-- Fornecedor------------
+
+SELECT
+	MAX (idfornecedor) + 1
+FROM
+	fornecedor;
+
+CREATE SEQUENCE
+	fornecedor_id_seq
+MINVALUE 
+	4;
+	
+ALTER TABLE
+	fornecedor
+ALTER
+	idfornecedor
+SET DEFAULT
+	nextval('fornecedor_id_seq');
+
+ALTER SEQUENCE
+	fornecedor_id_seq
+OWNED BY
+	fornecedor.idfornecedor;
+	
+SELECT
+	*
+FROM
+	fornecedor;
+
+INSERT INTO
+	fornecedor (nome)
+VALUES 
+	('Net Digital.SA');
+	
+INSERT INTO
+	fornecedor (nome)
+VALUES 
+	('BauruInfo');
+
+-- municipio------------
+
+SELECT
+	MAX (idmunicipio) + 1
+FROM
+	municipio;
+	
+CREATE SEQUENCE
+	municipio_id_seq
+MINVALUE 11;
+
+ALTER TABLE
+	municipio
+ALTER
+	idmunicipio
+SET DEFAULT
+	nextval('municipio_id_seq');
+	
+ALTER SEQUENCE
+	municipio_id_seq
+OWNED BY
+	municipio.idmunicipio;
+	
+SELECT
+	*
+FROM
+	municipio;
+	
+INSERT INTO
+	municipio (nome, iduf)
+VALUES 
+	('Bauru', 3);
+	
+INSERT INTO
+	municipio (nome, iduf)
+VALUES 
+	('Agudos', 3);
+
+-- Nacionalidade------------
+
+SELECT
+	*
+FROM
+	nacionalidade;
+
+SELECT
+	MAX (idnacionalidade) + 1
+FROM
+	nacionalidade;
+	
+CREATE SEQUENCE
+	nacionalidade_id_seq
+MINVALUE
+	5;
+
+ALTER TABLE
+	nacionalidade
+ALTER
+	idnacionalidade
+SET DEFAULT 
+	nextval('nacionalidade_id_seq');
+
+ALTER SEQUENCE
+	nacionalidade_id_seq
+OWNED BY
+	nacionalidade.idnacionalidade;
+	
+SELECT
+	*
+FROM
+	nacionalidade;
+
+INSERT INTO
+	nacionalidade (nome)
+VALUES
+	('Argentina');
+	
+INSERT INTO
+	nacionalidade (nome)
+VALUES
+	('Japão');
+	
+DELETE 
+FROM
+	nacionalidade
+WHERE 
+ idnacionalidade = 9;
+ 
+DROP SEQUENCE
+	nacionalidade_id_seq;
+	
+ALTER SEQUENCE
+	nacionalidade_id_seq
+MINVALUE
+	6;
+
+-- Pedido------------
+
+SELECT
+	MAX (idpedido) + 1
+FROM
+	pedido;
+
+CREATE SEQUENCE
+	pedido_id_seq
+MINVALUE
+	16;
+
+ALTER TABLE
+	pedido
+ALTER 
+	idpedido
+SET DEFAULT
+	nextval('pedido_id_seq');
+	
+ALTER SEQUENCE
+	pedido_id_seq
+OWNED BY
+	pedido.idpedido;
+	
+SELECT
+	*
+FROM
+	pedido;
+
+INSERT INTO
+	pedido (idcliente, idtransportadora, idvendedor, data_pedido, valor)
+VALUES 
+	(17, 2, 5, '2023-09-22', 1150);
+	
+-- Pedido------------
+SELECT
+	*
+FROM
+	pedido_produto;
+
+-- Profissao------------
+
+SELECT
+	MAX (idprofissao) + 1
+FROM
+	profissao;
+	
+CREATE SEQUENCE
+	profissao_id_seq
+MINVALUE
+	6;
+
+ALTER TABLE
+	profissao
+ALTER
+	idprofissao
+SET DEFAULT
+	nextval('profissao_id_seq');
+
+ALTER SEQUENCE
+	profissao_id_seq
+OWNED BY
+	profissao.idprofissao;
+
+SELECT
+	*
+FROM
+	profissao;
+
+INSERT INTO
+	profissao (nome)
+VALUES 
+	('Programador');
+
+-- trasportadora------------
+
+SELECT
+	MAX (idtransportadora) + 1
+FROM
+	transportadora;
+
+DROP SEQUENCE
+	trasportadora_id_seq;
+CREATE SEQUENCE
+	transportadora_id_seq
+MINVALUE
+	3;
+	
+ALTER TABLE
+	transportadora
+ALTER
+	idtransportadora
+SET DEFAULT
+	nextval('transportadora_id_seq');
+
+ALTER SEQUENCE
+	transportadora_id_seq
+OWNED BY
+	transportadora.idtransportadora;
+
+SELECT
+	*
+FROM
+	transportadora;
+
+INSERT INTO
+	transportadora (idmunicipio, nome, logradouro, numero)
+VALUES
+	(11, 'Mercado Livre', 'Rua das Entregas Rapidas', '101010');
+
+SELECT
+	*
+FROM
+	municipio;
+
+-- UF------------
+
+SELECT
+	MAX (iduf) + 1
+FROM
+	uf;
+DROP SEQUENCE
+	ud_id_seq;
+
+CREATE SEQUENCE
+	uf_id_seq
+MINVALUE
+	7;
+	
+ALTER TABLE
+	uf
+ALTER
+	iduf
+SET DEFAULT
+	nextval('uf_id_seq');
+	
+ALTER SEQUENCE
+	uf_id_seq
+OWNED BY
+	uf.iduf;
+	
+SELECT
+	*
+FROM
+	uf;
+	
+INSERT INTO
+	uf (nome, sigla)
+VALUES
+	('NewYork', 'NY');
+
+-- Vendedor------------
+
+SELECT
+	MAX (idvendedor) + 1
+FROM
+	vendedor;
+
+CREATE SEQUENCE 
+	vendedor_id_seq
+MINVALUE
+	9;
+
+ALTER TABLE
+	vendedor
+ALTER
+	idvendedor
+SET DEFAULT
+	nextval('vendedor_id_seq');
+	
+ALTER SEQUENCE
+	vendedor_id_seq
+OWNED BY
+	vendedor.idvendedor;
+
+SELECT
+ 	*
+FROM
+	vendedor;
+
+INSERT INTO
+	vendedor (nome)
+VALUES 
+	('Otniel');
