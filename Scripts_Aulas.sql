@@ -3014,6 +3014,29 @@ ALTER SEQUENCE
 OWNED BY
 	vendedor.idvendedor;
 
+SELECT 
+	MAX(idproduto) + 1
+FROM
+	produto;
+
+CREATE SEQUENCE
+	produto_id_seq
+MINVALUE
+	9;
+	
+ALTER TABLE
+	produto
+ALTER
+	idproduto
+SET DEFAULT
+	nextval('produto_id_seq');
+
+ALTER SEQUENCE
+	produto_id_seq
+OWNED BY
+	produto.idproduto;
+	
+	
 SELECT
  	*
 FROM
@@ -3023,3 +3046,101 @@ INSERT INTO
 	vendedor (nome)
 VALUES 
 	('Otniel');
+	
+--Campos default
+
+ALTER TABLE 
+	pedido
+ALTER COLUMN
+	data_pedido
+SET DEFAULT 
+	CURRENT_DATE;
+	
+ALTER TABLE
+	pedido
+ALTER COLUMN
+	valor
+SET DEFAULT
+	0;
+	
+SELECT
+	*
+FROM
+	pedido;
+	
+
+INSERT INTO
+	pedido (idcliente, idtransportadora, idvendedor)
+VALUES
+	(1, 1, 1);
+	
+--Exercícios valores default
+
+--1. Adicione valores default na tabela de produtos do pedido
+
+--a. Quantidade com o valor 1
+
+SELECT
+	*
+FROM
+	pedido_produto;
+
+ALTER TABLE
+	pedido_produto
+ALTER COLUMN
+	quantidade
+SET DEFAULT
+	1;
+
+--b. Valor unitário com o valor 0
+
+ALTER TABLE
+	pedido_produto
+ALTER COLUMN
+	valor_unitario
+SET DEFAULT
+	0;
+	
+INSERT INTO
+	pedido_produto (idpedido, idproduto)
+VALUES
+	(3, 1);
+
+--2. Adicione valor default na tabela de produtos
+SELECT
+	*
+FROM
+	produto;
+--a. Valor com o valor 0
+
+
+ALTER TABLE
+	produto
+ALTER COLUMN
+	valor
+SET DEFAULT
+	0;
+
+INSERT INTO
+	produto (idproduto, idfornecedor, nome)
+VALUES 
+	(8, 3, 'teclado');
+	
+--Índices
+
+CREATE INDEX
+	idx_cln_nome ON cliente (nome);
+	
+--Exercícios índices
+
+--1. Adicione índices nas seguintes tabelas e campos
+
+--a. Pedido – data do pedido
+
+CREATE INDEX
+	idx_ped_data ON pedido (data_pedido);
+
+--b. Produto – nome
+	
+CREATE INDEX
+	idx_prd_nome ON produto (nome);
